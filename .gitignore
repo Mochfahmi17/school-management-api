@@ -1,0 +1,19 @@
+# Node modules
+node_modules
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build output
+dist/
+build/
+
+# Keep environment variables out of version control
+.env
+
+# Typescript incremental build cache
+*.tsbuildinfo
