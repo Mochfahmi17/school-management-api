@@ -8,8 +8,6 @@ declare global {
     interface Request {
       user?: {
         id: string;
-        name: string;
-        email: string;
         role: string;
       };
     }
@@ -32,7 +30,7 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
     return next(createHttpError(401, "Invalid or expired token."));
   }
 
-  req.user = { id: decode.id, name: decode.name, email: decode.email, role: decode.role };
+  req.user = { id: decode.id, role: decode.role };
   next();
 };
 

@@ -7,7 +7,7 @@ import generateToken from "../utils/generateToken";
 export const loginController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { email, password } = req.body;
@@ -22,15 +22,13 @@ export const loginController = async (
       return next(
         createHttpError(
           401,
-          "Password invalid! Please make sure your password is correct."
-        )
+          "Password invalid! Please make sure your password is correct.",
+        ),
       );
     }
 
     const token = generateToken({
       id: existingUser.id,
-      name: existingUser.name,
-      email: existingUser.email,
       role: existingUser.role,
     });
     const isProd = process.env.NODE_ENV === "production";
@@ -52,7 +50,7 @@ export const loginController = async (
 export const currentUserController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const user = req.user;
@@ -61,8 +59,21 @@ export const currentUserController = async (
       return next(createHttpError(401, "Unauthorized."));
     }
 
+    const currentUser = await prisma.user.findUnique({
+      where: { id: user.id },
+    });
+
+    if (!currentUser) {
+      return next(createHttpError(404, "User not found!"));
+    }
+
     return res.status(200).json({
-      user,
+      user: {
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email,
+        role: currentUser.role,
+      },
     });
   } catch (error) {
     console.error("Get user error: ", error);
@@ -73,7 +84,7 @@ export const currentUserController = async (
 export const logoutController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const isProd = process.env.NODE_ENV === "production";
