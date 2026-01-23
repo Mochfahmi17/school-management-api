@@ -8,19 +8,32 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const salt = await bcryptjs.genSalt(10);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@school.ac.id" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@school.ac.id",
-      password: await bcryptjs.hash("adminku123", salt),
-      role: "ADMIN",
-    },
-  });
+  // const salt = await bcryptjs.genSalt(10);
+  // const admin = await prisma.user.upsert({
+  //   where: { email: "admin@school.ac.id" },
+  //   update: {},
+  //   create: {
+  //     name: "Admin",
+  //     email: "admin@school.ac.id",
+  //     password: await bcryptjs.hash("adminku123", salt),
+  //     role: "ADMIN",
+  //   },
+  // });
 
-  console.log({ admin });
+  // console.log({ admin });
+
+  const subjects = [
+    {
+      name: "Matematika",
+      code: "MTK",
+    },
+    { name: "Bahasa Indonesia", code: "BIN" },
+    { name: "Bahasa Inggris", code: "BIG" },
+    { name: "Ilmu Pengetahuan Alam", code: "IPA" },
+  ];
+
+  const saveSubjects = await prisma.subject.createMany({ data: subjects });
+  console.log({ saveSubjects });
 }
 
 main()

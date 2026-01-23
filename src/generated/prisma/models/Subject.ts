@@ -288,14 +288,9 @@ export type SubjectUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type SubjectListRelationFilter = {
-  every?: Prisma.SubjectWhereInput
-  some?: Prisma.SubjectWhereInput
-  none?: Prisma.SubjectWhereInput
-}
-
-export type SubjectOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type SubjectScalarRelationFilter = {
+  is?: Prisma.SubjectWhereInput
+  isNot?: Prisma.SubjectWhereInput
 }
 
 export type SubjectCountOrderByAggregateInput = {
@@ -322,42 +317,18 @@ export type SubjectMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type SubjectCreateNestedManyWithoutTeachersInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput> | Prisma.SubjectCreateWithoutTeachersInput[] | Prisma.SubjectUncheckedCreateWithoutTeachersInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutTeachersInput | Prisma.SubjectCreateOrConnectWithoutTeachersInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+export type SubjectCreateNestedOneWithoutTeachersInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutTeachersInput
+  connect?: Prisma.SubjectWhereUniqueInput
 }
 
-export type SubjectUncheckedCreateNestedManyWithoutTeachersInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput> | Prisma.SubjectCreateWithoutTeachersInput[] | Prisma.SubjectUncheckedCreateWithoutTeachersInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutTeachersInput | Prisma.SubjectCreateOrConnectWithoutTeachersInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-}
-
-export type SubjectUpdateManyWithoutTeachersNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput> | Prisma.SubjectCreateWithoutTeachersInput[] | Prisma.SubjectUncheckedCreateWithoutTeachersInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutTeachersInput | Prisma.SubjectCreateOrConnectWithoutTeachersInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutTeachersInput | Prisma.SubjectUpsertWithWhereUniqueWithoutTeachersInput[]
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutTeachersInput | Prisma.SubjectUpdateWithWhereUniqueWithoutTeachersInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutTeachersInput | Prisma.SubjectUpdateManyWithWhereWithoutTeachersInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-}
-
-export type SubjectUncheckedUpdateManyWithoutTeachersNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput> | Prisma.SubjectCreateWithoutTeachersInput[] | Prisma.SubjectUncheckedCreateWithoutTeachersInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutTeachersInput | Prisma.SubjectCreateOrConnectWithoutTeachersInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutTeachersInput | Prisma.SubjectUpsertWithWhereUniqueWithoutTeachersInput[]
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutTeachersInput | Prisma.SubjectUpdateWithWhereUniqueWithoutTeachersInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutTeachersInput | Prisma.SubjectUpdateManyWithWhereWithoutTeachersInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
+export type SubjectUpdateOneRequiredWithoutTeachersNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutTeachersInput
+  upsert?: Prisma.SubjectUpsertWithoutTeachersInput
+  connect?: Prisma.SubjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubjectUpdateToOneWithWhereWithoutTeachersInput, Prisma.SubjectUpdateWithoutTeachersInput>, Prisma.SubjectUncheckedUpdateWithoutTeachersInput>
 }
 
 export type SubjectCreateWithoutTeachersInput = {
@@ -381,31 +352,15 @@ export type SubjectCreateOrConnectWithoutTeachersInput = {
   create: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput>
 }
 
-export type SubjectUpsertWithWhereUniqueWithoutTeachersInput = {
-  where: Prisma.SubjectWhereUniqueInput
+export type SubjectUpsertWithoutTeachersInput = {
   update: Prisma.XOR<Prisma.SubjectUpdateWithoutTeachersInput, Prisma.SubjectUncheckedUpdateWithoutTeachersInput>
   create: Prisma.XOR<Prisma.SubjectCreateWithoutTeachersInput, Prisma.SubjectUncheckedCreateWithoutTeachersInput>
+  where?: Prisma.SubjectWhereInput
 }
 
-export type SubjectUpdateWithWhereUniqueWithoutTeachersInput = {
-  where: Prisma.SubjectWhereUniqueInput
+export type SubjectUpdateToOneWithWhereWithoutTeachersInput = {
+  where?: Prisma.SubjectWhereInput
   data: Prisma.XOR<Prisma.SubjectUpdateWithoutTeachersInput, Prisma.SubjectUncheckedUpdateWithoutTeachersInput>
-}
-
-export type SubjectUpdateManyWithWhereWithoutTeachersInput = {
-  where: Prisma.SubjectScalarWhereInput
-  data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutTeachersInput>
-}
-
-export type SubjectScalarWhereInput = {
-  AND?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-  OR?: Prisma.SubjectScalarWhereInput[]
-  NOT?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-  id?: Prisma.StringFilter<"Subject"> | string
-  name?: Prisma.StringFilter<"Subject"> | string
-  code?: Prisma.StringFilter<"Subject"> | string
-  createdAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
 }
 
 export type SubjectUpdateWithoutTeachersInput = {
@@ -417,14 +372,6 @@ export type SubjectUpdateWithoutTeachersInput = {
 }
 
 export type SubjectUncheckedUpdateWithoutTeachersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  code?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type SubjectUncheckedUpdateManyWithoutTeachersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string

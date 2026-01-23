@@ -6,6 +6,7 @@ import "dotenv/config";
 import helmet from "helmet";
 import authRouter from "./routes/authRoute";
 import { errorHandler, notFound } from "./middlewares/errorHandler";
+import teachersRouter from "./routes/teachersRoute";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -25,7 +26,7 @@ app.use(
         ? process.env.CLIENT_URL
         : "http://localhost:3000",
     credentials: true,
-  })
+  }),
 );
 app.use(helmet({ crossOriginResourcePolicy: false }));
 
@@ -34,6 +35,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/teacher", teachersRouter);
 
 // global error handling
 app.use(notFound);

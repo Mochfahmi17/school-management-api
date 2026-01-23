@@ -43,7 +43,8 @@ model Teacher {
   nip       String    @unique
   phone     String    @unique
   classes   Class[]
-  subjects  Subject[]
+  subjectId String
+  subjects  Subject @relation(fields: [subjectId], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
