@@ -12,3 +12,5 @@ export const addTeacherSchema = z.object({
     .regex(/^(08|628)\d{8,11}$/, "Nomor handphone harus diawali 08 atau 628."),
   subjectId: z.string().min(1, "Mata pelajaran wajib diisi."),
 });
+
+export const editTeacherSchema = addTeacherSchema.partial();

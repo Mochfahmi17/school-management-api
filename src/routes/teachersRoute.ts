@@ -3,10 +3,11 @@ import authenticate from "../middlewares/authenticate";
 import { allowRoles } from "../middlewares/allowRoles";
 import {
   addTeacherController,
+  editTeacherController,
   getAllTeachersController,
 } from "../controllers/teachersController";
 import validate from "../middlewares/validate";
-import { addTeacherSchema } from "../schemas/teacherSchema";
+import { addTeacherSchema, editTeacherSchema } from "../schemas/teacherSchema";
 
 const teachersRouter = express.Router();
 
@@ -25,6 +26,15 @@ teachersRouter.post(
   allowRoles("ADMIN"),
   validate(addTeacherSchema),
   addTeacherController,
+);
+
+//* PUT
+teachersRouter.put(
+  "/:id",
+  authenticate,
+  allowRoles("ADMIN"),
+  validate(editTeacherSchema),
+  editTeacherController,
 );
 
 export default teachersRouter;
