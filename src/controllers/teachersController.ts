@@ -9,14 +9,34 @@ export const getAllTeachersController = async (
   next: NextFunction,
 ) => {
   try {
-    const allTeachers = await prisma.teacher.findMany({
-      include: {
-        user: { select: { id: true, name: true, email: true } },
-        subjects: true,
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await prisma.teacher.count();
+
+    const allTeachers = await prisma.user.findMany({
+      where: { role: "TEACHER" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        teacher: { include: { subjects: true } },
       },
+      skip,
+      take: limit,
+      orderBy: { name: "asc" },
     });
 
-    return res.status(200).json({ data: allTeachers });
+    return res
+      .status(200)
+      .json({
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        data: allTeachers,
+      });
   } catch (error) {
     console.error("get data all teachers is error: ", error);
     return next(createHttpError(500, "Failed to get all data teachers."));
@@ -99,5 +119,27 @@ export const editTeacherController = async (
   } catch (error) {
     console.error("Edit teacher is error: ", error);
     return next(createHttpError(500, "Failed to edit teacher."));
+  }
+};
+
+export const deleteTeacherController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+
+    const teacher = await prisma.user.findUnique({ where: { id } });
+    if (!teacher || teacher.role !== "TEACHER") {
+      return next(createHttpError(404, "This teacher is not found!"));
+    }
+
+    await prisma.user.delete({ where: { id: teacher.id } });
+
+    return res.status(200).json({ message: "Teacher is deleted." });
+  } catch (error) {
+    console.error("Delete teacher is error: ", error);
+    return next(createHttpError(500, "Failed to delete teacher."));
   }
 };

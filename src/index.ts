@@ -7,6 +7,7 @@ import helmet from "helmet";
 import authRouter from "./routes/authRoute";
 import { errorHandler, notFound } from "./middlewares/errorHandler";
 import teachersRouter from "./routes/teachersRoute";
+import subjectsRouter from "./routes/subjectsRoute";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -36,6 +37,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/teacher", teachersRouter);
+app.use("/api/subject", subjectsRouter);
 
 // global error handling
 app.use(notFound);

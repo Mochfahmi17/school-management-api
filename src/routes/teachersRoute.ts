@@ -3,6 +3,7 @@ import authenticate from "../middlewares/authenticate";
 import { allowRoles } from "../middlewares/allowRoles";
 import {
   addTeacherController,
+  deleteTeacherController,
   editTeacherController,
   getAllTeachersController,
 } from "../controllers/teachersController";
@@ -35,6 +36,14 @@ teachersRouter.put(
   allowRoles("ADMIN"),
   validate(editTeacherSchema),
   editTeacherController,
+);
+
+//* DELETE
+teachersRouter.delete(
+  "/:id",
+  authenticate,
+  allowRoles("ADMIN"),
+  deleteTeacherController,
 );
 
 export default teachersRouter;
