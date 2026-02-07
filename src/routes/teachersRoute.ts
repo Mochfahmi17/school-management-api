@@ -6,6 +6,7 @@ import {
   deleteTeacherController,
   editTeacherController,
   getAllTeachersController,
+  getSigleTeacherController,
 } from "../controllers/teachersController";
 import validate from "../middlewares/validate";
 import { addTeacherSchema, editTeacherSchema } from "../schemas/teacherSchema";
@@ -18,6 +19,12 @@ teachersRouter.get(
   authenticate,
   allowRoles("ADMIN"),
   getAllTeachersController,
+);
+teachersRouter.get(
+  "/:id",
+  authenticate,
+  allowRoles("ADMIN"),
+  getSigleTeacherController,
 );
 
 //*POST

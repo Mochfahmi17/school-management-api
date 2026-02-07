@@ -28,18 +28,44 @@ export const getAllTeachersController = async (
       orderBy: { name: "asc" },
     });
 
-    return res
-      .status(200)
-      .json({
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        data: allTeachers,
-      });
+    return res.status(200).json({
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      data: allTeachers,
+    });
   } catch (error) {
     console.error("get data all teachers is error: ", error);
     return next(createHttpError(500, "Failed to get all data teachers."));
+  }
+};
+
+export const getSigleTeacherController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+    const teacher = await prisma.user.findFirst({
+      where: { id, role: "TEACHER" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        teacher: { include: { subjects: true } },
+      },
+    });
+
+    if (!teacher) {
+      return next(createHttpError(404, "Data guru tidak di temukan!"));
+    }
+
+    return res.status(200).json({ teacher });
+  } catch (error) {
+    console.error("get single teacher is error: ", error);
+    return next(createHttpError(500, "Failed to get single data teacher."));
   }
 };
 
@@ -85,8 +111,8 @@ export const editTeacherController = async (
     const { name, email, nip, phone, subjectId } = req.body;
     const { id } = req.params;
 
-    const teacher = await prisma.user.findUnique({
-      where: { id },
+    const teacher = await prisma.user.findFirst({
+      where: { id, role: "TEACHER" },
       include: { teacher: true },
     });
     if (!teacher) {
