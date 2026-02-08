@@ -9,23 +9,55 @@ export const getAllTeachersController = async (
   next: NextFunction,
 ) => {
   try {
+    const { sortBy = "createdAt", order = "asc" } = req.query;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
 
     const total = await prisma.teacher.count();
 
-    const allTeachers = await prisma.user.findMany({
-      where: { role: "TEACHER" },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        teacher: { include: { subjects: true } },
+    const safeOrder = order === "desc" ? "desc" : "asc";
+
+    let orderBy: Object;
+    switch (sortBy) {
+      case "name":
+        orderBy = {
+          user: {
+            name: safeOrder,
+          },
+        };
+        break;
+
+      case "email":
+        orderBy = {
+          user: {
+            email: safeOrder,
+          },
+        };
+        break;
+
+      case "subject":
+        orderBy = {
+          subjects: {
+            name: safeOrder,
+          },
+        };
+        break;
+
+      default:
+        orderBy = {
+          createdAt: "asc",
+        };
+    }
+
+    const allTeachers = await prisma.teacher.findMany({
+      include: {
+        user: { select: { name: true, email: true, role: true } },
+        subjects: { select: { name: true } },
       },
       skip,
       take: limit,
-      orderBy: { name: "asc" },
+      orderBy,
     });
 
     return res.status(200).json({
@@ -48,13 +80,11 @@ export const getSigleTeacherController = async (
 ) => {
   try {
     const { id } = req.params;
-    const teacher = await prisma.user.findFirst({
-      where: { id, role: "TEACHER" },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        teacher: { include: { subjects: true } },
+    const teacher = await prisma.teacher.findUnique({
+      where: { id },
+      include: {
+        user: { select: { name: true, email: true } },
+        subjects: { select: { name: true } },
       },
     });
 
@@ -111,35 +141,30 @@ export const editTeacherController = async (
     const { name, email, nip, phone, subjectId } = req.body;
     const { id } = req.params;
 
-    const teacher = await prisma.user.findFirst({
-      where: { id, role: "TEACHER" },
-      include: { teacher: true },
+    const teacher = await prisma.teacher.findUnique({
+      where: { id },
+      include: {
+        user: { select: { name: true, email: true } },
+        subjects: { select: { id: true, name: true } },
+      },
     });
     if (!teacher) {
       return next(createHttpError(404, "Guru tidak ditemukan!"));
     }
 
     const payloadData = {
-      name: name ?? teacher.name,
-      email: email ?? teacher.email,
-      nip: nip ?? teacher.teacher?.nip,
-      phone: phone ?? teacher.teacher?.phone,
-      subjectId: subjectId ?? teacher.teacher?.subjectId,
+      user: {
+        update: {
+          name: name ?? teacher.user.name,
+          email: email ?? teacher.user.email,
+        },
+      },
+      nip: nip ?? teacher.nip,
+      phone: phone ?? teacher.phone,
+      subjects: { connect: { id: subjectId } },
     };
 
-    const updateTeacher = await prisma.user.update({
-      where: { id: teacher.id },
-      data: { name: payloadData.name, email: payloadData.email },
-    });
-
-    await prisma.teacher.update({
-      where: { userId: updateTeacher.id },
-      data: {
-        nip: payloadData.nip,
-        phone: payloadData.phone,
-        subjectId: payloadData.subjectId,
-      },
-    });
+    await prisma.teacher.update({ where: { id }, data: payloadData });
 
     return res.status(200).json({ message: "Teacher updated." });
   } catch (error) {
