@@ -16,7 +16,7 @@ export const getAllTeachersController = async (
 
     const total = await prisma.teacher.count();
 
-    const safeOrder = order === "desc" ? "desc" : "asc";
+    const safeOrder = order === "desc" ? "asc" : "desc";
 
     let orderBy: Object;
     switch (sortBy) {
@@ -117,12 +117,13 @@ export const addTeacherController = async (
     const salt = await bcryptjs.genSalt(10);
     const hashPassword = await bcryptjs.hash(nip, salt);
 
-    const newTeacher = await prisma.user.create({
-      data: { name, email, password: hashPassword },
-    });
-
-    await prisma.teacher.create({
-      data: { userId: newTeacher.id, nip, phone, subjectId },
+    const newTeacher = await prisma.teacher.create({
+      data: {
+        nip,
+        phone,
+        user: { create: { name, email, password: hashPassword } },
+        subjects: { connect: { id: subjectId } },
+      },
     });
 
     return res.status(201).json({ message: "Berhasil menambahkan data guru." });
@@ -152,16 +153,23 @@ export const editTeacherController = async (
       return next(createHttpError(404, "Guru tidak ditemukan!"));
     }
 
+    let hashPassword: string | undefined;
+    if (nip) {
+      const salt = await bcryptjs.genSalt(10);
+      hashPassword = await bcryptjs.hash(nip, salt);
+    }
+
     const payloadData = {
       user: {
         update: {
           name: name ?? teacher.user.name,
           email: email ?? teacher.user.email,
+          ...(hashPassword && { password: hashPassword }),
         },
       },
       nip: nip ?? teacher.nip,
       phone: phone ?? teacher.phone,
-      subjects: { connect: { id: subjectId } },
+      subjects: { connect: subjectId ? { id: subjectId } : undefined },
     };
 
     await prisma.teacher.update({ where: { id }, data: payloadData });
@@ -181,12 +189,15 @@ export const deleteTeacherController = async (
   try {
     const { id } = req.params;
 
-    const teacher = await prisma.user.findUnique({ where: { id } });
-    if (!teacher || teacher.role !== "TEACHER") {
+    const teacher = await prisma.teacher.findUnique({
+      where: { id },
+      select: { userId: true },
+    });
+    if (!teacher) {
       return next(createHttpError(404, "This teacher is not found!"));
     }
 
-    await prisma.user.delete({ where: { id: teacher.id } });
+    await prisma.user.delete({ where: { id: teacher.userId } });
 
     return res.status(200).json({ message: "Teacher is deleted." });
   } catch (error) {
