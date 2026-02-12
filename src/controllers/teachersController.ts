@@ -89,7 +89,7 @@ export const getSigleTeacherController = async (
     });
 
     if (!teacher) {
-      return next(createHttpError(404, "Data guru tidak di temukan!"));
+      return next(createHttpError(404, "Data guru tidak ditemukan!"));
     }
 
     return res.status(200).json({ teacher });
@@ -117,7 +117,7 @@ export const addTeacherController = async (
     const salt = await bcryptjs.genSalt(10);
     const hashPassword = await bcryptjs.hash(nip, salt);
 
-    const newTeacher = await prisma.teacher.create({
+    await prisma.teacher.create({
       data: {
         nip,
         phone,
@@ -174,7 +174,7 @@ export const editTeacherController = async (
 
     await prisma.teacher.update({ where: { id }, data: payloadData });
 
-    return res.status(200).json({ message: "Teacher updated." });
+    return res.status(200).json({ message: "Guru berhasil di update." });
   } catch (error) {
     console.error("Edit teacher is error: ", error);
     return next(createHttpError(500, "Failed to edit teacher."));
@@ -199,7 +199,7 @@ export const deleteTeacherController = async (
 
     await prisma.user.delete({ where: { id: teacher.userId } });
 
-    return res.status(200).json({ message: "Teacher is deleted." });
+    return res.status(200).json({ message: "Data guru berhasil dihapus." });
   } catch (error) {
     console.error("Delete teacher is error: ", error);
     return next(createHttpError(500, "Failed to delete teacher."));
