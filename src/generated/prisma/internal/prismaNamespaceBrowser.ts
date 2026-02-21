@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Teacher: 'Teacher',
   Subject: 'Subject',
+  AcademicYear: 'AcademicYear',
   Class: 'Class',
   Student: 'Student'
 } as const
@@ -111,11 +112,23 @@ export const SubjectScalarFieldEnum = {
 export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
 
 
+export const AcademicYearScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AcademicYearScalarFieldEnum = (typeof AcademicYearScalarFieldEnum)[keyof typeof AcademicYearScalarFieldEnum]
+
+
 export const ClassScalarFieldEnum = {
   id: 'id',
   name: 'name',
   grade: 'grade',
-  academicYear: 'academicYear',
+  major: 'major',
+  academicYearId: 'academicYearId',
   homeroomTeacherId: 'homeroomTeacherId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -130,6 +143,8 @@ export const StudentScalarFieldEnum = {
   name: 'name',
   gender: 'gender',
   birthDate: 'birthDate',
+  status: 'status',
+  academicYearId: 'academicYearId',
   classId: 'classId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -152,4 +167,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

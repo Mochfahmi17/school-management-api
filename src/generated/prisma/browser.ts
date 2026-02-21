@@ -33,6 +33,11 @@ export type Teacher = Prisma.TeacherModel
  */
 export type Subject = Prisma.SubjectModel
 /**
+ * Model AcademicYear
+ * 
+ */
+export type AcademicYear = Prisma.AcademicYearModel
+/**
  * Model Class
  * 
  */

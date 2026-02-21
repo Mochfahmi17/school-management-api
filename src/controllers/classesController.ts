@@ -10,7 +10,8 @@ export const getAllClassesController = async (
   try {
     const classes = await prisma.class.findMany({
       include: {
-        teacher: { select: { user: { select: { name: true } } } },
+        academicYear: { select: { year: true } },
+        homeroomTeacher: { select: { user: { select: { name: true } } } },
         student: true,
       },
     });
@@ -33,7 +34,8 @@ export const getSingleClassController = async (
     const classroom = await prisma.class.findUnique({
       where: { id },
       include: {
-        teacher: { select: { user: { select: { name: true } } } },
+        academicYear: { select: { year: true } },
+        homeroomTeacher: { select: { user: { select: { name: true } } } },
         student: true,
       },
     });
@@ -54,7 +56,7 @@ export const addClassController = async (
   next: NextFunction,
 ) => {
   try {
-    const { name, grade, academicYear, homeroomTeacherId } = req.body;
+    const { name, grade, major, academicYearId, homeroomTeacherId } = req.body;
 
     const teacher = await prisma.teacher.findUnique({
       where: { id: homeroomTeacherId },
@@ -64,7 +66,7 @@ export const addClassController = async (
     }
 
     const existingClass = await prisma.class.findFirst({
-      where: { name, academicYear },
+      where: { name, academicYearId },
     });
 
     if (existingClass) {
@@ -77,8 +79,9 @@ export const addClassController = async (
       data: {
         name,
         grade,
-        academicYear,
-        teacher: { connect: { id: homeroomTeacherId } },
+        major,
+        academicYear: { connect: { id: academicYearId } },
+        homeroomTeacher: { connect: { id: homeroomTeacherId } },
       },
     });
 
@@ -95,7 +98,7 @@ export const editClassController = async (
   next: NextFunction,
 ) => {
   try {
-    const { name, grade, academicYear, homeroomTeacherId } = req.body;
+    const { name, grade, major, academicYearId, homeroomTeacherId } = req.body;
     const { id } = req.params;
 
     const classroom = await prisma.class.findUnique({ where: { id } });
@@ -106,7 +109,10 @@ export const editClassController = async (
     const payloadData = {
       name: name ?? classroom.name,
       grade: grade ?? classroom.grade,
-      academicYear: academicYear ?? classroom.academicYear,
+      major: major ?? classroom.major,
+      academicYear: {
+        connect: academicYearId ? { id: academicYearId } : undefined,
+      },
       teacher: {
         connect: homeroomTeacherId ? { id: homeroomTeacherId } : undefined,
       },

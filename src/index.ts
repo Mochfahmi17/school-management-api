@@ -9,6 +9,7 @@ import { errorHandler, notFound } from "./middlewares/errorHandler";
 import teachersRouter from "./routes/teachersRoute";
 import subjectsRouter from "./routes/subjectsRoute";
 import classesRouter from "./routes/classesRoute";
+import academicYearRouter from "./routes/academicYearRoute";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -38,6 +39,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/teacher", teachersRouter);
+app.use("/api/academic-year", academicYearRouter);
 app.use("/api/class", classesRouter);
 app.use("/api/subject", subjectsRouter);
 

@@ -19,8 +19,8 @@ enum Role {
 }
 
 enum Gender {
-  MALE
-  FEMALE
+  Male
+  Female
 }
 
 model User {
@@ -37,16 +37,16 @@ model User {
 }
 
 model Teacher {
-  id        String    @id @default(cuid())
-  userId    String    @unique
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  nip       String    @unique
-  phone     String    @unique
-  classes   Class[]
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nip       String   @unique
+  phone     String   @unique
+  homeroom  Class[]  @relation("HomeroomTeacher")
   subjectId String
-  subjects  Subject @relation(fields: [subjectId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  subjects  Subject  @relation(fields: [subjectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("teachers")
 }
@@ -62,30 +62,54 @@ model Subject {
   @@map("subjects")
 }
 
+model AcademicYear {
+  id        String    @id @default(cuid())
+  year      String    @unique
+  isActive  Boolean   @default(false)
+  students  Student[]
+  class     Class[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("academicYears")
+}
+
 model Class {
-  id                String    @id @default(cuid())
+  id                String       @id @default(cuid())
   name              String
   grade             Int
-  academicYear      String
+  major             String
+  academicYearId    String
+  academicYear      AcademicYear @relation(fields: [academicYearId], references: [id])
   homeroomTeacherId String
-  teacher           Teacher   @relation(fields: [homeroomTeacherId], references: [id])
+  homeroomTeacher   Teacher      @relation("HomeroomTeacher", fields: [homeroomTeacherId], references: [id])
   student           Student[]
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   @@map("classes")
 }
 
+enum StudentStatus {
+  Active
+  Graduated
+  Dropped_Out
+  Transferred
+}
+
 model Student {
-  id        String   @id @default(cuid())
-  nis       String   @unique
-  name      String
-  gender    Gender
-  birthDate DateTime
-  classId   String
-  class     Class    @relation(fields: [classId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String        @id @default(cuid())
+  nis            String        @unique
+  name           String
+  gender         Gender
+  birthDate      DateTime
+  status         StudentStatus @default(Active)
+  academicYearId String
+  academicYear   AcademicYear  @relation(fields: [academicYearId], references: [id])
+  classId        String?
+  class          Class?        @relation(fields: [classId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@map("students")
 }

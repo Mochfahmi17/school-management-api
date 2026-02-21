@@ -18,8 +18,18 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 
 export const Gender = {
-  MALE: 'MALE',
-  FEMALE: 'FEMALE'
+  Male: 'Male',
+  Female: 'Female'
 } as const
 
 export type Gender = (typeof Gender)[keyof typeof Gender]
+
+
+export const StudentStatus = {
+  Active: 'Active',
+  Graduated: 'Graduated',
+  Dropped_Out: 'Dropped_Out',
+  Transferred: 'Transferred'
+} as const
+
+export type StudentStatus = (typeof StudentStatus)[keyof typeof StudentStatus]
